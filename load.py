@@ -3,6 +3,8 @@ import sqlalchemy
 import graphene
 from app.schemas import graphql_app
 import uvicorn
+import script_data
+
 app = FastAPI()
 
 app.add_route('/graphql', graphql_app)
