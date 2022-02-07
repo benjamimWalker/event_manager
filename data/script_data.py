@@ -1,12 +1,23 @@
 import datetime
-
-from app.database import Base, engine, session
-
-from app.models import Status, User, Event
-
-import random
-
+from app.db.database import Base, engine, session
+from app.models.model import Status, User, Event
 from faker import Faker
+import random
+from typing import Type
+from sqlalchemy.orm import Session
+from app.db.database import Base
+
+
+def get_random_register_from_table(table: Type[Base], session: Session) -> Type[Base]:
+    rand = random.randrange(0, session.query(table).count())
+    return session.query(table)[rand]
+
+
+def create_data():
+    Base.metadata.create_all(engine)
+    create_status_data()
+    create_users_data(5)
+    create_events_data(10, 'new description')
 
 
 def create_status_data():
@@ -60,15 +71,6 @@ def create_events_data(qtd_events, description_instance, title_intance='event'):
             user = session.query(User).filter(User.id == i).one()
             new_event.participants.append(user)
 
-        print(new_event.participants)
-
         session.commit()
 
-
-if __name__ == '__main__':
-    Base.metadata.create_all(engine)
-    create_status_data()
-    create_users_data(5)
-    create_events_data(10, 'new description')
-    for instance in session.query(Event):
-        print(instance.title)
+    

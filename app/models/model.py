@@ -1,11 +1,12 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, Table
 from sqlalchemy.orm import relationship
-from .database import Base
+from app.db.database import Base
+from datetime import datetime
 
 event_user = Table('event_user', Base.metadata,
-                   Column('user_id', ForeignKey('user.id'), primary_key=True),
-                   Column('event_id', ForeignKey('event.id'), primary_key=True)
-                   )
+    Column('user_id', ForeignKey('user.id'), primary_key=True),
+    Column('event_id', ForeignKey('event.id'), primary_key=True)
+)
 
 
 class Status(Base):
@@ -53,9 +54,9 @@ class Event(Base):
 
     status = relationship('Status')
 
-    date_created = Column(DateTime)
+    date_created = Column(DateTime(timezone=True), onupdate=datetime.now())
 
-    date_event = Column(DateTime)
+    date_event = Column(DateTime(timezone=True))
 
     active = Column(Boolean)
 

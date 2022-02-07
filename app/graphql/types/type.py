@@ -1,6 +1,5 @@
-from .models import Status, Event, User
-
 from graphene_sqlalchemy import SQLAlchemyObjectType
+from app.models.model import Event, Status, User
 
 
 class EventType(SQLAlchemyObjectType):
