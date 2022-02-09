@@ -1,12 +1,7 @@
-import json
-
 from pytest import mark
+from app.utils.utils import get_random_register_from_table as get_event
+from app.models.model import Event
 
-from data.script_data import get_random_register_from_table as get_event
-
-from app.models.model import User
-
-from app.db.database import session
 
 @mark.events
 def test_get_events_from_event_table(my_client):
@@ -18,7 +13,6 @@ def test_get_events_from_event_table(my_client):
                         id
                         title
                         dateEvent
-                        dateCreated
                         description
                         author{
                             id
@@ -46,7 +40,7 @@ def test_get_events_from_event_table(my_client):
 
     assert response.status_code == 200
 
-    assert len(all_events) > 0
+    assert all_events
 
     for instance in range(len(all_events)):
         for participant in range(len(all_events[instance]['participants'])):
@@ -63,17 +57,30 @@ def test_get_one_event_from_events_table(my_client):
         "query": """
         query ($id:Int!){
             events{
-                item(idEvent: $id){
+                item(eventId: $id){
                     id
                     title
                     description
+                    dateEvent
+                    status{
+                        id
+                        name
+                    }
+                    author{
+                        id
+                        name
+                    }
+                    participants{
+                        id
+                        name
+                    }
                 }
             }
         }
         """
     }
     variables = {
-        "id": get_event(User, session).id
+        "id": get_event(Event).id
     }
 
     query['variables'] = variables
@@ -90,3 +97,5 @@ def test_get_one_event_from_events_table(my_client):
     assert variables['id'] == int(response.json()['data']['events']['item']['id'])
     assert response.json()['data']['events']['item']
     assert response.json()['data']['events']['item']['id'].isdigit()
+    assert response.json()['data']['events']['item']['author']['id']
+    assert response.json()['data']['events']['item']['participants']

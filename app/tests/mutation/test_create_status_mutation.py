@@ -1,4 +1,3 @@
-import json
 from faker import Faker
 
 fake = Faker()
@@ -7,7 +6,7 @@ def test_create_a_new_status_instance(my_client):
     mutation = {
         "query": """
         mutation ($name: String!){
-            createStatusMutation(statusData: {name: $name, active:true}){
+            createStatusMutation(name: $name){
                 status{
                     id
                     name

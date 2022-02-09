@@ -6,7 +6,7 @@ def test_create_a_new_user(my_client):
     mutation = {
         'query': '''
             mutation ($name: String!){
-                createUserMutation(userData: { name: $name, active: true }) {
+                createUserMutation(name: $name) {
                     user {
                         id
                         name

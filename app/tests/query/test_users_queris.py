@@ -7,7 +7,7 @@ def test_get_all_users_query(my_client):
         "query": '''
         {
             users{
-                items{
+                all{
                     id
                     name
                 }
@@ -22,14 +22,13 @@ def test_get_all_users_query(my_client):
             'content_type': 'application/json'
         }
     )
-
-    all_users = response.json()['data']['users']['items']
-
-    number_of_users = len(all_users)
-
-    number_of_valid_users = len([user['id'] for user in all_users if user['id']])
-
     assert response.status_code == 200
-    assert number_of_users != 0
-    assert number_of_valid_users == number_of_users
+
+    assert response.json()['data']['users']['all']
+
+    all_users = response.json()['data']['users']['all']
+
+    for user in range(len(all_users)):
+        assert all_users[user]['name']
+        assert all_users[user]['id'].isdigit()
 

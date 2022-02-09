@@ -4,9 +4,9 @@ from app.db.database import Base
 from datetime import datetime
 
 event_user = Table('event_user', Base.metadata,
-    Column('user_id', ForeignKey('user.id'), primary_key=True),
-    Column('event_id', ForeignKey('event.id'), primary_key=True)
-)
+                   Column('user_id', ForeignKey('user.id'), primary_key=True),
+                   Column('event_id', ForeignKey('event.id'), primary_key=True)
+                   )
 
 
 class Status(Base):
@@ -16,7 +16,7 @@ class Status(Base):
 
     name = Column(String)
 
-    active = Column(Boolean)
+    active = Column(Boolean, default=True)
 
     def __repr__(self):
         return self.name
@@ -29,10 +29,7 @@ class User(Base):
 
     name = Column(String)
 
-    active = Column(Boolean)
-
-# def __repr__(self):
-# 	return self.name
+    active = Column(Boolean, default=True)
 
 
 class Event(Base):
@@ -58,7 +55,7 @@ class Event(Base):
 
     date_event = Column(DateTime(timezone=True))
 
-    active = Column(Boolean)
+    active = Column(Boolean, default=True)
 
     def __repr__(self):
         return self.title.title()

@@ -1,16 +1,10 @@
 import datetime
-from app.db.database import Base, engine, session
+from app.db.database import Base, engine, get_session
 from app.models.model import Status, User, Event
 from faker import Faker
 import random
-from typing import Type
-from sqlalchemy.orm import Session
-from app.db.database import Base
 
-
-def get_random_register_from_table(table: Type[Base], session: Session) -> Type[Base]:
-    rand = random.randrange(0, session.query(table).count())
-    return session.query(table)[rand]
+session = get_session()
 
 
 def create_data():
@@ -50,17 +44,16 @@ def create_events_data(qtd_events, description_instance, title_intance='event'):
     count_status = session.query(Status).count()
 
     for num_event in range(qtd_events):
-        instance_autor = session.query(User).get(random.randint(1, count_users))
+        instance_author = session.query(User).get(random.randint(1, count_users))
 
         instance_status = session.query(Status).get(random.randint(1, count_status))
 
         new_event = Event(
             title=f'{title_intance} {num_event}',
             description=f'{description_instance}',
-            author_id=instance_autor.id,
+            author_id=instance_author.id,
             status_id=instance_status.id,
             active=True,
-            date_created=datetime.datetime.now(),
             date_event=datetime.datetime.now())
 
         session.add(new_event)
@@ -74,3 +67,5 @@ def create_events_data(qtd_events, description_instance, title_intance='event'):
         session.commit()
 
     
+if __name__ == "__main__":
+    create_data()
